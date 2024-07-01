@@ -16,6 +16,7 @@ ALTER TABLE "user_role" DROP CONSTRAINT user_role_role_id_fkey;
 -- Drop indexes
 DROP INDEX IF EXISTS idx_user_email;
 DROP INDEX IF EXISTS idx_user_phone;
+DROP INDEX IF EXISTS idx_user_password_hash;
 DROP INDEX IF EXISTS idx_role_name;
 DROP INDEX IF EXISTS idx_user_role_user_id;
 DROP INDEX IF EXISTS idx_user_role_role_id;

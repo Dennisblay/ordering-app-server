@@ -114,10 +114,11 @@ type Testimonial struct {
 
 type User struct {
 	ID                  int32            `json:"id"`
-	Name                pgtype.Text      `json:"name"`
+	FirstName           string           `json:"first_name"`
+	LastName            string           `json:"last_name"`
 	Email               string           `json:"email"`
-	Phone               pgtype.Text      `json:"phone"`
-	Address             pgtype.Text      `json:"address"`
+	Phone               string           `json:"phone"`
+	Address             string           `json:"address"`
 	PasswordHash        string           `json:"password_hash"`
 	ResetToken          pgtype.Text      `json:"reset_token"`
 	ResetTokenExpiresAt pgtype.Timestamp `json:"reset_token_expires_at"`
