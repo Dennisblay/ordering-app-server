@@ -1,4 +1,18 @@
-# Simple Makefile for a Go project
+# Default .env file
+ENV_FILE := devconfig.env
+
+# Check for MODE and set the appropriate .env file
+ifeq ($(ENV),prod)
+	ENV_FILE := config.env
+endif
+
+# Include the chosen .env file
+ifneq (,$(wildcard $(ENV_FILE)))
+	include $(ENV_FILE)
+	export
+else
+	$(error Environment file $(ENV_FILE) not found)
+endif
 
 # Build the application
 all: build
@@ -11,25 +25,32 @@ build:
 
 # Run the application
 run:
-	@go run cmd/api/main.go
+	@echo "Starting server in development mode..."
+	@echo $(ENV_FILE)
+	@ENV=local go run cmd/api/main.go
+
+run-prod:
+	@echo "Starting server in production mode..."
+	@echo $(ENV_FILE)
+	ENV=prod @go run cmd/api/main.go
+
 
 # Create DB container
-docker-run:
-	@if docker compose up 2>/dev/null; then \
-		: ; \
-	else \
-		echo "Falling back to Docker Compose V1"; \
-		docker-compose up; \
-	fi
 
-# Shutdown DB container
+docker-up:
+	docker compose up -d
+
 docker-down:
-	@if docker compose down 2>/dev/null; then \
-		: ; \
-	else \
-		echo "Falling back to Docker Compose V1"; \
-		docker-compose down; \
-	fi
+	docker compose down -v
+
+migrate-create:
+	migrate create -ext sql -dir internal/database/migrations -seq orders_db
+
+migrate-up:
+	migrate -path ./internal/database/migrations -database "$(DATABASE_URL)" -verbose up
+
+migrate-down:
+	migrate -path ./internal/database/migrations -database "$(DATABASE_URL)" -verbose down
 
 # Test the application
 test:
@@ -40,6 +61,10 @@ test:
 clean:
 	@echo "Cleaning..."
 	@rm -f main
+
+
+generate:
+	sqlc generate
 
 # Live Reload
 watch:
@@ -58,4 +83,4 @@ watch:
 	    fi; \
 	fi
 
-.PHONY: all build run test clean
+.PHONY: all build run test clean run run-prod watch docker-up docker-down

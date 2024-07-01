@@ -1,39 +1,33 @@
 package server
 
 import (
-	"fmt"
-	"net/http"
-	"os"
-	"strconv"
-	"time"
-
-	_ "github.com/joho/godotenv/autoload"
-
-	"ordering-server/internal/database"
+	"github.com/gin-gonic/gin"
+	db "ordering-server/internal/database"
 )
 
+// Server all HTTP requests
 type Server struct {
-	port int
-
-	db database.Service
+	router *gin.Engine
+	store  *db.Store
 }
 
-func NewServer() *http.Server {
-	port, _ := strconv.Atoi(os.Getenv("PORT"))
-	NewServer := &Server{
-		port: port,
+func NewServer(store *db.Store) (*Server, error) {
 
-		db: database.New(),
+	server := &Server{
+		router: gin.Default(),
+		store:  store,
 	}
+	// Remove from here
+	server.RegisterRoutes()
 
-	// Declare Server config
-	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", NewServer.port),
-		Handler:      NewServer.RegisterRoutes(),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
-	}
+	return server, nil
+}
 
-	return server
+func (s *Server) RegisterRoutes() {
+	// Register Routes
+	s.userRoutes()
+}
+
+func (s *Server) RunServer(address string) error {
+	return s.router.Run(address)
 }
