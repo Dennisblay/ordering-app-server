@@ -28,6 +28,11 @@ func (s *Server) RegisterRoutes() {
 	s.userRoutes()
 }
 
+// ConfigureCORS Configure CORS
+func (s *Server) ConfigureCORS() {
+
+}
+
 func (s *Server) RunServer(address string) error {
 	return s.router.Run(address)
 }

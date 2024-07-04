@@ -8,6 +8,10 @@ orders. The server is written in Go and uses a Postgres database to store the or
 These instructions will get you a copy of the project up and running on your local machine for development and testing
 purposes. See deployment for notes on how to deploy the project on a live system.
 
+## Documentation
+Visit this link to view the Database Documentation : [DB Documentation]( https://dbdocs.io/dennisboachie9/ordering
+)
+
 ## MakeFile
 
 run all make commands with clean tests
