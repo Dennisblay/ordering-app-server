@@ -82,5 +82,14 @@ func TestDeleteUser(t *testing.T) {
 	user2, err := testQueries.GetUserById(context.Background(), user1.ID)
 	require.Error(t, err)
 	require.Empty(t, user2)
-
 }
+
+//func GetAllUsers(t *testing.T) {
+//	for _ = range 10 {
+//		CreateRandomUser(t)
+//	}
+//
+//
+//	users, err := testQueries.GetAllUsers(context.Background())
+//	require.NoError(t, err)
+//}
