@@ -3,7 +3,7 @@ SELECT id, first_name, last_name, email, phone, address
 FROM "user";
 
 -- name: GetUserById :one
-SELECT id, first_name, last_name, email, phone, address
+SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
 WHERE id = $1
 LIMIT 1;
@@ -32,6 +32,20 @@ INSERT INTO "user" (first_name, last_name, email, password_hash, phone, address)
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
 
+
+-- name: UpdateUser :one
+UPDATE "user"
+SET first_name = $2,
+    last_name  = $3,
+    email = $4,
+    phone = $5,
+    address = $6,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+
+
+
 -- name: UpdateUserName :one
 UPDATE "user"
 SET first_name = $2,
@@ -42,21 +56,21 @@ RETURNING id, first_name, last_name, email, phone, address, created_at, updated_
 
 -- name: UpdateUserEmail :one
 UPDATE "user"
-SET email = $2,
+SET email      = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
 
 -- name: UpdateUserPhone :one
 UPDATE "user"
-SET phone = $2,
+SET phone      = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
 
 -- name: UpdateUserAddress :one
 UPDATE "user"
-SET address = $2,
+SET address    = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
@@ -64,7 +78,7 @@ RETURNING id, first_name, last_name, email, phone, address, created_at, updated_
 -- name: UpdateUserPassword :one
 UPDATE "user"
 SET password_hash = $2,
-    updated_at = CURRENT_TIMESTAMP
+    updated_at    = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
 

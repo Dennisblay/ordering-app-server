@@ -11,7 +11,7 @@
       "gen": {
         "go": {
           "package": "db",
-          "out": "pkg/models",
+          "out": "internal/database/models",
           "sql_package": "pgx/v5",
           "overrides": [
             {
@@ -22,6 +22,16 @@
               "db_type": "geometry",
               "go_type": "github.com/twpayne/go-geom.Point",
               "nullable": true
+            },
+            {
+              "db_type": "timestampz",
+              "nullable": false,
+              "go_type":  "time.Time"
+            },
+            {
+              "db_type": "timestamp",
+              "nullable": false,
+              "go_type":  "time.Time"
             }
           ],
           "emit_json_tags": true,

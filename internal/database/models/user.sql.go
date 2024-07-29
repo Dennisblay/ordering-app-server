@@ -7,8 +7,7 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -27,14 +26,14 @@ type CreateUserParams struct {
 }
 
 type CreateUserRow struct {
-	ID        int32            `json:"id"`
-	FirstName string           `json:"first_name"`
-	LastName  string           `json:"last_name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Address   string           `json:"address"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error) {
@@ -179,19 +178,21 @@ func (q *Queries) GetUserByEmailAndPassword(ctx context.Context, arg GetUserByEm
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, first_name, last_name, email, phone, address
+SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
 WHERE id = $1
 LIMIT 1
 `
 
 type GetUserByIdRow struct {
-	ID        int32  `json:"id"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-	Phone     string `json:"phone"`
-	Address   string `json:"address"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, error) {
@@ -204,6 +205,8 @@ func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, er
 		&i.Email,
 		&i.Phone,
 		&i.Address,
+		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -238,9 +241,64 @@ func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (GetUserByPh
 	return i, err
 }
 
+const updateUser = `-- name: UpdateUser :one
+UPDATE "user"
+SET first_name = $2,
+    last_name  = $3,
+    email = $4,
+    phone = $5,
+    address = $6,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at
+`
+
+type UpdateUserParams struct {
+	ID        int32  `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone"`
+	Address   string `json:"address"`
+}
+
+type UpdateUserRow struct {
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (UpdateUserRow, error) {
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.ID,
+		arg.FirstName,
+		arg.LastName,
+		arg.Email,
+		arg.Phone,
+		arg.Address,
+	)
+	var i UpdateUserRow
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.Phone,
+		&i.Address,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const updateUserAddress = `-- name: UpdateUserAddress :one
 UPDATE "user"
-SET address = $2,
+SET address    = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at
@@ -252,14 +310,14 @@ type UpdateUserAddressParams struct {
 }
 
 type UpdateUserAddressRow struct {
-	ID        int32            `json:"id"`
-	FirstName string           `json:"first_name"`
-	LastName  string           `json:"last_name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Address   string           `json:"address"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUserAddress(ctx context.Context, arg UpdateUserAddressParams) (UpdateUserAddressRow, error) {
@@ -280,7 +338,7 @@ func (q *Queries) UpdateUserAddress(ctx context.Context, arg UpdateUserAddressPa
 
 const updateUserEmail = `-- name: UpdateUserEmail :one
 UPDATE "user"
-SET email = $2,
+SET email      = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at
@@ -292,14 +350,14 @@ type UpdateUserEmailParams struct {
 }
 
 type UpdateUserEmailRow struct {
-	ID        int32            `json:"id"`
-	FirstName string           `json:"first_name"`
-	LastName  string           `json:"last_name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Address   string           `json:"address"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUserEmail(ctx context.Context, arg UpdateUserEmailParams) (UpdateUserEmailRow, error) {
@@ -334,14 +392,14 @@ type UpdateUserNameParams struct {
 }
 
 type UpdateUserNameRow struct {
-	ID        int32            `json:"id"`
-	FirstName string           `json:"first_name"`
-	LastName  string           `json:"last_name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Address   string           `json:"address"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUserName(ctx context.Context, arg UpdateUserNameParams) (UpdateUserNameRow, error) {
@@ -363,7 +421,7 @@ func (q *Queries) UpdateUserName(ctx context.Context, arg UpdateUserNameParams) 
 const updateUserPassword = `-- name: UpdateUserPassword :one
 UPDATE "user"
 SET password_hash = $2,
-    updated_at = CURRENT_TIMESTAMP
+    updated_at    = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at
 `
@@ -374,14 +432,14 @@ type UpdateUserPasswordParams struct {
 }
 
 type UpdateUserPasswordRow struct {
-	ID        int32            `json:"id"`
-	FirstName string           `json:"first_name"`
-	LastName  string           `json:"last_name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Address   string           `json:"address"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (UpdateUserPasswordRow, error) {
@@ -402,7 +460,7 @@ func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPassword
 
 const updateUserPhone = `-- name: UpdateUserPhone :one
 UPDATE "user"
-SET phone = $2,
+SET phone      = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at
@@ -414,14 +472,14 @@ type UpdateUserPhoneParams struct {
 }
 
 type UpdateUserPhoneRow struct {
-	ID        int32            `json:"id"`
-	FirstName string           `json:"first_name"`
-	LastName  string           `json:"last_name"`
-	Email     string           `json:"email"`
-	Phone     string           `json:"phone"`
-	Address   string           `json:"address"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUserPhone(ctx context.Context, arg UpdateUserPhoneParams) (UpdateUserPhoneRow, error) {

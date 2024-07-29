@@ -19,7 +19,8 @@ all: build
 
 build:
 	@echo "Building..."
-	
+
+
 	
 	@go build -o main cmd/api/main.go
 
@@ -35,12 +36,10 @@ run-prod:
 	ENV=prod @go run cmd/api/main.go
 
 
-# Create DB container
-
-docker-up:
+up:
 	docker compose up -d
 
-docker-down:
+down:
 	docker compose down -v
 
 migrate-create:
@@ -55,7 +54,8 @@ migrate-down:
 # Test the application
 test:
 	@echo "Testing..."
-	@go test ./tests -v
+#	@go test ./tests -v -cover
+	go test -v -cover ./...
 
 # Clean the binary
 clean:
@@ -83,4 +83,4 @@ watch:
 	    fi; \
 	fi
 
-.PHONY: all build run test clean run run-prod watch docker-up docker-down
+.PHONY: all build run test clean run run-prod watch docker-up docker-down migrate-create up down generate test-crud

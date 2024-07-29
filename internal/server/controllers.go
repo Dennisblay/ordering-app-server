@@ -3,8 +3,8 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	types "ordering-server/internal/database/models"
 	error2 "ordering-server/pkg/error"
-	db "ordering-server/pkg/models"
 )
 
 func (s *Server) getAllUsersController(ctx *gin.Context) {
@@ -21,7 +21,7 @@ func (s *Server) getAllUsersController(ctx *gin.Context) {
 }
 
 func (s *Server) getUserByIdController(ctx *gin.Context) {
-	var reqID db.UserRequestByID
+	var reqID types.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -38,7 +38,7 @@ func (s *Server) getUserByIdController(ctx *gin.Context) {
 }
 
 func (s *Server) getUserByEmailController(ctx *gin.Context) {
-	var reqEmail db.UserRequestByEmail
+	var reqEmail types.UserRequestByEmail
 	if err := ctx.ShouldBindUri(&reqEmail); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -55,7 +55,7 @@ func (s *Server) getUserByEmailController(ctx *gin.Context) {
 }
 
 func (s *Server) getUserByPhoneController(ctx *gin.Context) {
-	var reqPhone db.UserRequestByPhone
+	var reqPhone types.UserRequestByPhone
 	if err := ctx.ShouldBindUri(&reqPhone); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -72,13 +72,13 @@ func (s *Server) getUserByPhoneController(ctx *gin.Context) {
 }
 
 func (s *Server) getUserByEmailAndPasswordController(ctx *gin.Context) {
-	var req db.UserRequestByEmailAndPassword
+	var req types.UserRequestByEmailAndPassword
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, error2.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.GetUserByEmailAndPassword(ctx, db.GetUserByEmailAndPasswordParams{Email: req.Email, PasswordHash: req.Password})
+	user, err := s.store.GetUserByEmailAndPassword(ctx, types.GetUserByEmailAndPasswordParams{Email: req.Email, PasswordHash: req.Password})
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, error2.ErrorResponse(err))
 		return
@@ -89,13 +89,13 @@ func (s *Server) getUserByEmailAndPasswordController(ctx *gin.Context) {
 }
 
 func (s *Server) createUserController(ctx *gin.Context) {
-	var req db.CreateUserRequest
+	var req types.CreateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, error2.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.CreateUser(ctx, db.CreateUserParams{FirstName: req.FirstName, LastName: req.LastName, Email: req.Email, PasswordHash: req.PasswordHash, Phone: req.Phone, Address: req.Address})
+	user, err := s.store.CreateUser(ctx, types.CreateUserParams{FirstName: req.FirstName, LastName: req.LastName, Email: req.Email, PasswordHash: req.PasswordHash, Phone: req.Phone, Address: req.Address})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -106,19 +106,19 @@ func (s *Server) createUserController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserNameController(ctx *gin.Context) {
-	var reqID db.UserRequestByID
+	var reqID types.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
 	}
 
-	var req db.UpdateUserNameRequest
+	var req types.UpdateUserNameRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, error2.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserName(ctx, db.UpdateUserNameParams{ID: reqID.ID, FirstName: req.FirstName, LastName: req.LastName})
+	user, err := s.store.UpdateUserName(ctx, types.UpdateUserNameParams{ID: reqID.ID, FirstName: req.FirstName, LastName: req.LastName})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -129,19 +129,19 @@ func (s *Server) updateUserNameController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserEmailController(ctx *gin.Context) {
-	var reqID db.UserRequestByID
+	var reqID types.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
 	}
 
-	var req db.UpdateUserEmailRequest
+	var req types.UpdateUserEmailRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, error2.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserEmail(ctx, db.UpdateUserEmailParams{ID: reqID.ID, Email: req.Email})
+	user, err := s.store.UpdateUserEmail(ctx, types.UpdateUserEmailParams{ID: reqID.ID, Email: req.Email})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -152,19 +152,19 @@ func (s *Server) updateUserEmailController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserPhoneController(ctx *gin.Context) {
-	var reqID db.UserRequestByID
+	var reqID types.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
 	}
 
-	var req db.UpdateUserPhoneRequest
+	var req types.UpdateUserPhoneRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, error2.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserPhone(ctx, db.UpdateUserPhoneParams{ID: reqID.ID, Phone: req.Phone})
+	user, err := s.store.UpdateUserPhone(ctx, types.UpdateUserPhoneParams{ID: reqID.ID, Phone: req.Phone})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -175,19 +175,19 @@ func (s *Server) updateUserPhoneController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserAddressController(ctx *gin.Context) {
-	var reqID db.UserRequestByID
+	var reqID types.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
 	}
 
-	var req db.UpdateUserAddressRequest
+	var req types.UpdateUserAddressRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, error2.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserAddress(ctx, db.UpdateUserAddressParams{ID: reqID.ID, Address: req.Address})
+	user, err := s.store.UpdateUserAddress(ctx, types.UpdateUserAddressParams{ID: reqID.ID, Address: req.Address})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
@@ -202,7 +202,7 @@ func (s *Server) updateUserPasswordController(ctx *gin.Context) {
 }
 
 func (s *Server) deleteUserController(ctx *gin.Context) {
-	var reqID db.UserRequestByID
+	var reqID types.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, error2.ErrorResponse(err))
 		return
