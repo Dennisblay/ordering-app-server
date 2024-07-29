@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-var testQueries Queries
+var testQueries *Queries
 
 func TestMain(m *testing.M) {
 	configEnv, err := config.LoadConfig("../../..")
@@ -24,6 +24,6 @@ func TestMain(m *testing.M) {
 		return
 	}
 
-	testQueries =
-		os.Exit(m.Run())
+	testQueries = New(conn)
+	os.Exit(m.Run())
 }

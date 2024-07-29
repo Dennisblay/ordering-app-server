@@ -73,3 +73,14 @@ func TestUpdateUser(t *testing.T) {
 
 	require.WithinDuration(t, user2.CreatedAt, user1.CreatedAt, time.Second)
 }
+
+func TestDeleteUser(t *testing.T) {
+	user1 := CreateRandomUser(t)
+	err := testQueries.DeleteUser(context.Background(), user1.ID)
+	require.NoError(t, err)
+
+	user2, err := testQueries.GetUserById(context.Background(), user1.ID)
+	require.Error(t, err)
+	require.Empty(t, user2)
+
+}
