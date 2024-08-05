@@ -1,20 +1,23 @@
-package database
+package db
 
 import (
 	"github.com/jackc/pgx/v5/pgxpool"
-	"ordering-server/internal/database/models"
 )
 
 // Store provides all functions to execute db queries and transactions
-type Store struct {
-	*db.Queries
+type Store interface {
+	Querier
+}
+
+type SQLStore struct {
+	*Queries
 	connPool *pgxpool.Pool
 }
 
-func NewStore(connPool *pgxpool.Pool) *Store {
-	return &Store{
+func NewStore(connPool *pgxpool.Pool) Store {
+	return &SQLStore{
 		connPool: connPool,
-		Queries:  db.New(connPool),
+		Queries:  New(connPool),
 	}
 }
 

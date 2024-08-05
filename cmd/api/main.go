@@ -6,7 +6,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 	"ordering-server/config"
-	"ordering-server/internal/database"
 	"ordering-server/internal/server"
 )
 
@@ -20,20 +19,20 @@ func main() {
 	store, err := InitDb(configEnv.DBUrl)
 	s, err := server.NewServer(store)
 	if err != nil {
-		log.Fatal("cannot start server:", err)
+		log.Fatal("cannot start api:", err)
 	}
 
 	err = s.RunServer(configEnv.ServerAddress)
 	if err != nil {
-		log.Fatal("cannot start server:", err)
+		log.Fatal("cannot start api:", err)
 	}
 
 }
 
-func InitDb(DBUrl string) (*database.Store, error) {
+func InitDb(DBUrl string) (db.Store, error) {
 	conn, err := pgxpool.New(context.Background(), DBUrl)
 	if err != nil {
 		return nil, err
 	}
-	return database.NewStore(conn), nil
+	return db.NewStore(conn), nil
 }

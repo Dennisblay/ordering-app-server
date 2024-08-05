@@ -63,8 +63,12 @@ clean:
 	@rm -f main
 
 
-generate:
+sqlc:
 	sqlc generate
+
+mock:
+	mockgen -package mockdb -destination internal/database/mock/store.go  ordering-server/internal/database/models Store
+
 
 # Live Reload
 watch:
@@ -83,4 +87,4 @@ watch:
 	    fi; \
 	fi
 
-.PHONY: all build run test clean run run-prod watch docker-up docker-down migrate-create up down generate test-crud
+.PHONY: all build run test clean run run-prod watch docker-up docker-down migrate-create up down sqlc test-crud mock

@@ -23,9 +23,9 @@ type CreateSocialMediaParams struct {
 	Link     pgtype.Text `json:"link"`
 }
 
-func (q *Queries) CreateSocialMedia(ctx context.Context, arg CreateSocialMediaParams) (SocialMedium, error) {
+func (q *Queries) CreateSocialMedia(ctx context.Context, arg CreateSocialMediaParams) (SocialMedia, error) {
 	row := q.db.QueryRow(ctx, createSocialMedia, arg.UserID, arg.Platform, arg.Link)
-	var i SocialMedium
+	var i SocialMedia
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
@@ -164,9 +164,9 @@ type UpdateSocialMediaParams struct {
 	Link     pgtype.Text `json:"link"`
 }
 
-func (q *Queries) UpdateSocialMedia(ctx context.Context, arg UpdateSocialMediaParams) (SocialMedium, error) {
+func (q *Queries) UpdateSocialMedia(ctx context.Context, arg UpdateSocialMediaParams) (SocialMedia, error) {
 	row := q.db.QueryRow(ctx, updateSocialMedia, arg.ID, arg.Platform, arg.Link)
-	var i SocialMedium
+	var i SocialMedia
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,

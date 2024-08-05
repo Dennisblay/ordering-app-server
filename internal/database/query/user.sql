@@ -1,6 +1,9 @@
--- name: GetAllUsers :many
-SELECT id, first_name, last_name, email, phone, address
-FROM "user";
+-- name: GetUsers :many
+SELECT *
+FROM "user"
+order by id
+limit $1
+offset $2 ;
 
 -- name: GetUserById :one
 SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
@@ -8,20 +11,15 @@ FROM "user"
 WHERE id = $1
 LIMIT 1;
 
--- name: GetUserByEmail :one
-SELECT id, first_name, last_name, email, phone, address
+-- name: GetUser :one
+SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
-WHERE email = $1
+WHERE id = $1 or email = $2 or phone = $3
 LIMIT 1;
 
--- name: GetUserByPhone :one
-SELECT id, first_name, last_name, email, phone, address
-FROM "user"
-WHERE phone = $1
-LIMIT 1;
 
 -- name: GetUserByEmailAndPassword :one
-SELECT id, first_name, last_name, email, phone, address
+SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
 WHERE email = $1
   AND password_hash = $2
@@ -30,7 +28,7 @@ LIMIT 1;
 -- name: CreateUser :one
 INSERT INTO "user" (first_name, last_name, email, password_hash, phone, address)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 
 -- name: UpdateUser :one
@@ -43,8 +41,6 @@ SET first_name = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
 RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
-
-
 
 -- name: UpdateUserName :one
 UPDATE "user"
@@ -80,7 +76,7 @@ UPDATE "user"
 SET password_hash = $2,
     updated_at    = CURRENT_TIMESTAMP
 WHERE id = $1
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 -- name: DeleteUser :exec
 DELETE

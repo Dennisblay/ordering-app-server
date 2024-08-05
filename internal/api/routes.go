@@ -1,13 +1,12 @@
-package server
+package api
 
 func (s *Server) userRoutes() {
 	// User routes
 	userGroup := s.router.Group("/users")
 	{
-		userGroup.GET("/", s.getAllUsersController)
-		userGroup.GET("/:id", s.getUserByIdController)
-		userGroup.GET("/email/:email", s.getUserByEmailController)
-		userGroup.GET("/phone/:phone", s.getUserByPhoneController)
+		userGroup.GET("/", s.getUsersController)
+		userGroup.GET("/:id", s.getUserByIDController)
+		userGroup.GET("/", s.getUserControllerByEmailOrPhone)
 		userGroup.POST("/login", s.getUserByEmailAndPasswordController)
 		userGroup.POST("/", s.createUserController)
 		userGroup.PUT("/:id/name", s.updateUserNameController)

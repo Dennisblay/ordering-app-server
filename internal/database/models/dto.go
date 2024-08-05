@@ -1,18 +1,26 @@
 package db
 
 type UserRequestByID struct {
-	ID int32 `uri:"id" binding:"required"`
+	ID int32 `uri:"id"`
 }
 
-type UserRequestByEmail struct {
-	Email string `uri:"email" binding:"required"`
+type UserRequest struct {
+	Email string `form:"email" json:"email,omitempty"`
+	Phone string `form:"phone" json:"phone,omitempty"`
 }
 
-type UserRequestByPhone struct {
-	Phone string `uri:"phone" binding:"required"`
+type UsersRequest struct {
+	Limit  int32 `uri:"limit" json:"limit,omitempty"`
+	Offset int32 `uri:"offset" json:"offset,omitempty"`
 }
+
 type UpdateUserAddressRequest struct {
-	Address string `uri:"address" binding:"required"`
+	Address string `json:"address" binding:"required"`
+}
+
+type UpdateUserPasswordRequest struct {
+	PasswordOld string `json:"password_old" binding:"required"`
+	PasswordNew string `json:"password_new" binding:"required"`
 }
 
 type CreateUserRequest struct {

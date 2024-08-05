@@ -1,17 +1,17 @@
-package server
+package api
 
 import (
+	db "github.com/Dennisblay/ordering-app-server/internal/database/models"
 	"github.com/gin-gonic/gin"
-	db "ordering-server/internal/database"
 )
 
 // Server all HTTP requests
 type Server struct {
 	router *gin.Engine
-	store  *db.Store
+	store  db.Store
 }
 
-func NewServer(store *db.Store) (*Server, error) {
+func NewServer(store db.Store) (*Server, error) {
 
 	server := &Server{
 		router: gin.Default(),

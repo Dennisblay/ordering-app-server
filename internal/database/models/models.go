@@ -97,7 +97,7 @@ type Session struct {
 	UpdatedAt time.Time   `json:"updated_at"`
 }
 
-type SocialMedium struct {
+type SocialMedia struct {
 	ID        int32       `json:"id"`
 	UserID    pgtype.Int4 `json:"user_id"`
 	Platform  pgtype.Text `json:"platform"`
