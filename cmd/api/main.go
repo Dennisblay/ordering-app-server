@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/Dennisblay/ordering-app-server/config"
+	"github.com/Dennisblay/ordering-app-server/internal/api"
+	db "github.com/Dennisblay/ordering-app-server/internal/database/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
-	"ordering-server/config"
-	"ordering-server/internal/server"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	}
 	fmt.Println("Configurations loaded")
 	store, err := InitDb(configEnv.DBUrl)
-	s, err := server.NewServer(store)
+	s, err := api.NewServer(store)
 	if err != nil {
 		log.Fatal("cannot start api:", err)
 	}

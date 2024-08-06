@@ -11,12 +11,11 @@ FROM "user"
 WHERE id = $1
 LIMIT 1;
 
--- name: GetUser :one
+-- name: GetUserByEmailOrPassword :one
 SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
 WHERE id = $1 or email = $2 or phone = $3
 LIMIT 1;
-
 
 -- name: GetUserByEmailAndPassword :one
 SELECT id, first_name, last_name, email, phone, address, created_at, updated_at

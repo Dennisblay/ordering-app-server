@@ -1,17 +1,18 @@
 package db
 
 type UserRequestByID struct {
-	ID int32 `uri:"id"`
+	ID int32 `uri:"id" binding:"required,min=1"`
 }
 
 type UserRequest struct {
+	ID    int32  `form:"id" json:"id,omitempty" binding:"min=1"`
 	Email string `form:"email" json:"email,omitempty"`
 	Phone string `form:"phone" json:"phone,omitempty"`
 }
 
 type UsersRequest struct {
-	Limit  int32 `uri:"limit" json:"limit,omitempty"`
-	Offset int32 `uri:"offset" json:"offset,omitempty"`
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=20"`
 }
 
 type UpdateUserAddressRequest struct {
@@ -24,7 +25,6 @@ type UpdateUserPasswordRequest struct {
 }
 
 type CreateUserRequest struct {
-	ID           int32  `json:"id" binding:"required"`
 	FirstName    string `json:"first_name" binding:"required"`
 	LastName     string `json:"last_name" binding:"required"`
 	Email        string `json:"email" binding:"required"`
@@ -47,6 +47,6 @@ type UpdateUserEmailRequest struct {
 }
 
 type UpdateUserNameRequest struct {
-	FirstName string `json:"firstname" binding:"required"`
-	LastName  string `json:"lastname" binding:"required"`
+	FirstName string `json:"first_name" binding:"required"`
+	LastName  string `json:"last_name" binding:"required"`
 }

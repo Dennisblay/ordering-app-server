@@ -54,7 +54,7 @@ migrate-down:
 # Test the application
 test:
 	@echo "Testing..."
-#	@go test ./tests -v -cover
+	#	@go test ./tests -v -cover
 	go test -v -cover ./...
 
 # Clean the binary
@@ -67,8 +67,7 @@ sqlc:
 	sqlc generate
 
 mock:
-	mockgen -package mockdb -destination internal/database/mock/store.go  ordering-server/internal/database/models Store
-
+	mockgen -package mockdb -destination internal/database/mock/store.go  github.com/Dennisblay/ordering-app-server/internal/database/models Store
 
 # Live Reload
 watch:

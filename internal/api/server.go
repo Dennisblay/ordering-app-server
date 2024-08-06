@@ -17,7 +17,6 @@ func NewServer(store db.Store) (*Server, error) {
 		router: gin.Default(),
 		store:  store,
 	}
-	// Remove from here
 	server.RegisterRoutes()
 
 	return server, nil

@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
+	"github.com/Dennisblay/ordering-app-server/util"
 	"github.com/stretchr/testify/require"
-	"ordering-server/util"
 	"testing"
 	"time"
 )
@@ -104,14 +104,14 @@ func TestGetUsers(t *testing.T) {
 	}
 }
 
-func TestGetUser(t *testing.T) {
+func TestGetUserByEmailOrPassword(t *testing.T) {
 	user1 := CreateRandomUser(t)
-	args := GetUserParams{
+	args := GetUserByEmailOrPasswordParams{
 		ID:    user1.ID,
 		Email: user1.Email,
 		Phone: user1.Phone,
 	}
-	user2, err := testQueries.GetUser(context.Background(), args)
+	user2, err := testQueries.GetUserByEmailOrPassword(context.Background(), args)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
 	require.Equal(t, user2.ID, user1.ID)

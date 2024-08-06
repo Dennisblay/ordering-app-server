@@ -3,9 +3,9 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/Dennisblay/ordering-app-server/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
-	"ordering-server/config"
 	"os"
 	"testing"
 )

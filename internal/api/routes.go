@@ -5,8 +5,8 @@ func (s *Server) userRoutes() {
 	userGroup := s.router.Group("/users")
 	{
 		userGroup.GET("/", s.getUsersController)
+		userGroup.GET("/email-phone", s.getUserControllerByEmailOrPhone)
 		userGroup.GET("/:id", s.getUserByIDController)
-		userGroup.GET("/", s.getUserControllerByEmailOrPhone)
 		userGroup.POST("/login", s.getUserByEmailAndPasswordController)
 		userGroup.POST("/", s.createUserController)
 		userGroup.PUT("/:id/name", s.updateUserNameController)
