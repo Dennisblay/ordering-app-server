@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	dto "github.com/Dennisblay/ordering-app-server/internal/database/models"
+	db "github.com/Dennisblay/ordering-app-server/internal/database/models"
 	errorhandler "github.com/Dennisblay/ordering-app-server/pkg/error"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
@@ -10,13 +10,13 @@ import (
 )
 
 func (s *Server) getUsersController(ctx *gin.Context) {
-	var req dto.UsersRequest
+	var req db.UsersRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	args := dto.GetUsersParams{
+	args := db.GetUsersParams{
 		Limit:  req.PageSize,
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
@@ -34,7 +34,7 @@ func (s *Server) getUsersController(ctx *gin.Context) {
 	return
 }
 func (s *Server) getUserByIDController(ctx *gin.Context) {
-	var req dto.UserRequestByID
+	var req db.UserRequestByID
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
@@ -54,13 +54,13 @@ func (s *Server) getUserByIDController(ctx *gin.Context) {
 }
 
 func (s *Server) getUserControllerByEmailOrPhone(ctx *gin.Context) {
-	var req dto.UserRequest
+	var req db.UserRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	args := dto.GetUserByEmailOrPasswordParams{
+	args := db.GetUserByEmailOrPasswordParams{
 		ID:    req.ID,
 		Email: req.Email,
 		Phone: req.Phone,
@@ -81,13 +81,13 @@ func (s *Server) getUserControllerByEmailOrPhone(ctx *gin.Context) {
 }
 
 func (s *Server) getUserByEmailAndPasswordController(ctx *gin.Context) {
-	var req dto.UserRequestByEmailAndPassword
+	var req db.UserRequestByEmailAndPassword
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.GetUserByEmailAndPassword(ctx, dto.GetUserByEmailAndPasswordParams{Email: req.Email, PasswordHash: req.Password})
+	user, err := s.store.GetUserByEmailAndPassword(ctx, db.GetUserByEmailAndPasswordParams{Email: req.Email, PasswordHash: req.Password})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorhandler.ErrorResponse(err))
@@ -103,13 +103,13 @@ func (s *Server) getUserByEmailAndPasswordController(ctx *gin.Context) {
 }
 
 func (s *Server) createUserController(ctx *gin.Context) {
-	var req dto.CreateUserRequest
+	var req db.CreateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.CreateUser(ctx, dto.CreateUserParams{FirstName: req.FirstName, LastName: req.LastName, Email: req.Email, PasswordHash: req.PasswordHash, Phone: req.Phone, Address: req.Address})
+	user, err := s.store.CreateUser(ctx, db.CreateUserParams{FirstName: req.FirstName, LastName: req.LastName, Email: req.Email, PasswordHash: req.PasswordHash, Phone: req.Phone, Address: req.Address})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorhandler.ErrorResponse(err))
@@ -125,19 +125,19 @@ func (s *Server) createUserController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserNameController(ctx *gin.Context) {
-	var reqID dto.UserRequestByID
+	var reqID db.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	var req dto.UpdateUserNameRequest
+	var req db.UpdateUserNameRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserName(ctx, dto.UpdateUserNameParams{ID: reqID.ID, FirstName: req.FirstName, LastName: req.LastName})
+	user, err := s.store.UpdateUserName(ctx, db.UpdateUserNameParams{ID: reqID.ID, FirstName: req.FirstName, LastName: req.LastName})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorhandler.ErrorResponse(err))
@@ -153,19 +153,19 @@ func (s *Server) updateUserNameController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserEmailController(ctx *gin.Context) {
-	var reqID dto.UserRequestByID
+	var reqID db.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	var req dto.UpdateUserEmailRequest
+	var req db.UpdateUserEmailRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserEmail(ctx, dto.UpdateUserEmailParams{ID: reqID.ID, Email: req.Email})
+	user, err := s.store.UpdateUserEmail(ctx, db.UpdateUserEmailParams{ID: reqID.ID, Email: req.Email})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorhandler.ErrorResponse(err))
@@ -181,19 +181,19 @@ func (s *Server) updateUserEmailController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserPhoneController(ctx *gin.Context) {
-	var reqID dto.UserRequestByID
+	var reqID db.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	var req dto.UpdateUserPhoneRequest
+	var req db.UpdateUserPhoneRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserPhone(ctx, dto.UpdateUserPhoneParams{ID: reqID.ID, Phone: req.Phone})
+	user, err := s.store.UpdateUserPhone(ctx, db.UpdateUserPhoneParams{ID: reqID.ID, Phone: req.Phone})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorhandler.ErrorResponse(err))
@@ -209,19 +209,19 @@ func (s *Server) updateUserPhoneController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserAddressController(ctx *gin.Context) {
-	var reqID dto.UserRequestByID
+	var reqID db.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	var req dto.UpdateUserAddressRequest
+	var req db.UpdateUserAddressRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 
-	user, err := s.store.UpdateUserAddress(ctx, dto.UpdateUserAddressParams{ID: reqID.ID, Address: req.Address})
+	user, err := s.store.UpdateUserAddress(ctx, db.UpdateUserAddressParams{ID: reqID.ID, Address: req.Address})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			ctx.JSON(http.StatusNotFound, errorhandler.ErrorResponse(err))
@@ -237,18 +237,18 @@ func (s *Server) updateUserAddressController(ctx *gin.Context) {
 }
 
 func (s *Server) updateUserPasswordController(ctx *gin.Context) {
-	var reqID dto.UserRequestByID
+	var reqID db.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 	}
 
-	var reqPassword dto.UpdateUserPasswordRequest
+	var reqPassword db.UpdateUserPasswordRequest
 	if err := ctx.ShouldBind(&reqPassword); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return
 	}
 	// first Check if old password == to existing password
-	args := dto.UpdateUserPasswordParams{
+	args := db.UpdateUserPasswordParams{
 		ID:           reqID.ID,
 		PasswordHash: reqPassword.PasswordNew,
 	}
@@ -268,7 +268,7 @@ func (s *Server) updateUserPasswordController(ctx *gin.Context) {
 }
 
 func (s *Server) deleteUserController(ctx *gin.Context) {
-	var reqID dto.UserRequestByID
+	var reqID db.UserRequestByID
 	if err := ctx.ShouldBindUri(&reqID); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
 		return

@@ -75,7 +75,7 @@ type Querier interface {
 	GetUserById(ctx context.Context, id int32) (GetUserByIdRow, error)
 	GetUserRolesByRoleId(ctx context.Context, roleID int32) ([]UserRole, error)
 	GetUserRolesByUserId(ctx context.Context, userID int32) ([]UserRole, error)
-	GetUsers(ctx context.Context, arg GetUsersParams) ([]User, error)
+	GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersRow, error)
 	UpdateBooking(ctx context.Context, arg UpdateBookingParams) (Booking, error)
 	UpdateNotification(ctx context.Context, arg UpdateNotificationParams) (Notification, error)
 	UpdateOrderItem(ctx context.Context, arg UpdateOrderItemParams) (OrderItem, error)

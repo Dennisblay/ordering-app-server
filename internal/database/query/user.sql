@@ -1,5 +1,5 @@
 -- name: GetUsers :many
-SELECT *
+SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
 order by id
 limit $1

@@ -178,7 +178,7 @@ func (q *Queries) GetUserById(ctx context.Context, id int32) (GetUserByIdRow, er
 }
 
 const getUsers = `-- name: GetUsers :many
-SELECT id, first_name, last_name, email, phone, address, password_hash, password_updated_at, reset_token, reset_token_expires_at, created_at, updated_at
+SELECT id, first_name, last_name, email, phone, address, created_at, updated_at
 FROM "user"
 order by id
 limit $1
@@ -190,15 +190,26 @@ type GetUsersParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]User, error) {
+type GetUsersRow struct {
+	ID        int32     `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]GetUsersRow, error) {
 	rows, err := q.db.Query(ctx, getUsers, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []User{}
+	items := []GetUsersRow{}
 	for rows.Next() {
-		var i User
+		var i GetUsersRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.FirstName,
@@ -206,10 +217,6 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) ([]User, err
 			&i.Email,
 			&i.Phone,
 			&i.Address,
-			&i.PasswordHash,
-			&i.PasswordUpdatedAt,
-			&i.ResetToken,
-			&i.ResetTokenExpiresAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
