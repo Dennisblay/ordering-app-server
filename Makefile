@@ -67,7 +67,7 @@ sqlc:
 	sqlc generate
 
 mock:
-	mockgen -package mockdb -destination internal/database/mock/store.go  github.com/Dennisblay/ordering-app-server/internal/database/models Store
+	mockgen -package mockdb -destination internal/database/mock/store.go  github.com/Dennisblay/ordering-app-server/internal/database/sqlc Store
 
 # Live Reload
 watch:

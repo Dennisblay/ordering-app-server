@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	mockdb "github.com/Dennisblay/ordering-app-server/internal/database/mock"
-	"github.com/Dennisblay/ordering-app-server/internal/database/models"
+	"github.com/Dennisblay/ordering-app-server/internal/database/sqlc"
 	"github.com/Dennisblay/ordering-app-server/util"
 	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/require"

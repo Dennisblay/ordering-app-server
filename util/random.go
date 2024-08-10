@@ -76,6 +76,6 @@ func RandomPhone() string {
 	)
 }
 
-func RandomPassword() string {
-	return RandomChars(12)
+func RandomPassword(n int) string {
+	return RandomChars(n)
 }

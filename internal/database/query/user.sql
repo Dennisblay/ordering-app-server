@@ -39,7 +39,7 @@ SET first_name = $2,
     address = $6,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 -- name: UpdateUserName :one
 UPDATE "user"
@@ -47,28 +47,28 @@ SET first_name = $2,
     last_name  = $3,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 -- name: UpdateUserEmail :one
 UPDATE "user"
 SET email      = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 -- name: UpdateUserPhone :one
 UPDATE "user"
 SET phone      = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 -- name: UpdateUserAddress :one
 UPDATE "user"
 SET address    = $2,
     updated_at = CURRENT_TIMESTAMP
 WHERE id = $1
-RETURNING id, first_name, last_name, email, phone, address, created_at, updated_at;
+RETURNING *;
 
 -- name: UpdateUserPassword :one
 UPDATE "user"

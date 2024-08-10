@@ -22,7 +22,7 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateSocialMedia(ctx context.Context, arg CreateSocialMediaParams) (SocialMedia, error)
 	CreateTestimonial(ctx context.Context, arg CreateTestimonialParams) (Testimonial, error)
-	CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	CreateUserRole(ctx context.Context, arg CreateUserRoleParams) (UserRole, error)
 	DeleteBooking(ctx context.Context, id int32) error
 	DeleteNotification(ctx context.Context, id int32) error

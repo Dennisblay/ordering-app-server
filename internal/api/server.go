@@ -1,7 +1,7 @@
 package api
 
 import (
-	db "github.com/Dennisblay/ordering-app-server/internal/database/models"
+	db "github.com/Dennisblay/ordering-app-server/internal/database/sqlc"
 	"github.com/gin-gonic/gin"
 )
 

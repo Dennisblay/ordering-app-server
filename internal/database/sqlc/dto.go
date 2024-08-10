@@ -1,5 +1,7 @@
 package db
 
+import "time"
+
 type UserRequestByID struct {
 	ID int32 `uri:"id" binding:"required,min=1"`
 }
@@ -24,13 +26,23 @@ type UpdateUserPasswordRequest struct {
 	PasswordNew string `json:"password_new" binding:"required"`
 }
 
+type UserResponse struct {
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	Address   string    `json:"address"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 type CreateUserRequest struct {
-	FirstName    string `json:"first_name" binding:"required"`
-	LastName     string `json:"last_name" binding:"required"`
-	Email        string `json:"email" binding:"required"`
-	PasswordHash string `json:"password_hash" binding:"required"`
-	Phone        string `json:"phone" binding:"required"`
-	Address      string `json:"address" binding:"required"`
+	FirstName string `json:"first_name" binding:"required,alphanum"`
+	LastName  string `json:"last_name" binding:"required,alphanum"`
+	Email     string `json:"email" binding:"required,email"`
+	Password  string `json:"password" binding:"required,min=6"`
+	Phone     string `json:"phone" binding:"required"`
+	Address   string `json:"address" binding:"required"`
 }
 
 type UserRequestByEmailAndPassword struct {

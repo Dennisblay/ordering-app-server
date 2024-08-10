@@ -13,7 +13,7 @@ import (
 const createUser = `-- name: CreateUser :one
 INSERT INTO "user" (first_name, last_name, email, password_hash, phone, address)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING first_name, last_name, email, password_hash, phone, address, updated_at, created_at
+RETURNING id, first_name, last_name, email, phone, address, password_hash, password_updated_at, reset_token, reset_token_expires_at, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -25,18 +25,7 @@ type CreateUserParams struct {
 	Address      string `json:"address"`
 }
 
-type CreateUserRow struct {
-	FirstName    string    `json:"first_name"`
-	LastName     string    `json:"last_name"`
-	Email        string    `json:"email"`
-	PasswordHash string    `json:"password_hash"`
-	Phone        string    `json:"phone"`
-	Address      string    `json:"address"`
-	UpdatedAt    time.Time `json:"updated_at"`
-	CreatedAt    time.Time `json:"created_at"`
-}
-
-func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error) {
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
 	row := q.db.QueryRow(ctx, createUser,
 		arg.FirstName,
 		arg.LastName,
@@ -45,16 +34,20 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateU
 		arg.Phone,
 		arg.Address,
 	)
-	var i CreateUserRow
+	var i User
 	err := row.Scan(
+		&i.ID,
 		&i.FirstName,
 		&i.LastName,
 		&i.Email,
-		&i.PasswordHash,
 		&i.Phone,
 		&i.Address,
-		&i.UpdatedAt,
+		&i.PasswordHash,
+		&i.PasswordUpdatedAt,
+		&i.ResetToken,
+		&i.ResetTokenExpiresAt,
 		&i.CreatedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/Dennisblay/ordering-app-server/config"
 	"github.com/Dennisblay/ordering-app-server/internal/api"
-	db "github.com/Dennisblay/ordering-app-server/internal/database/models"
+	db "github.com/Dennisblay/ordering-app-server/internal/database/sqlc"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
 )
