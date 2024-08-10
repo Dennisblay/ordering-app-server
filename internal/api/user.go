@@ -13,6 +13,7 @@ func (s *Server) getUsersController(ctx *gin.Context) {
 	var req dto.UsersRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
+		return
 	}
 
 	args := dto.GetUsersParams{
@@ -36,6 +37,7 @@ func (s *Server) getUserByIDController(ctx *gin.Context) {
 	var req dto.UserRequestByID
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
+		return
 	}
 
 	user, err := s.store.GetUserById(ctx, req.ID)
@@ -48,12 +50,14 @@ func (s *Server) getUserByIDController(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, user)
+	return
 }
 
 func (s *Server) getUserControllerByEmailOrPhone(ctx *gin.Context) {
 	var req dto.UserRequest
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorhandler.ErrorResponse(err))
+		return
 	}
 
 	args := dto.GetUserByEmailOrPasswordParams{
@@ -73,6 +77,7 @@ func (s *Server) getUserControllerByEmailOrPhone(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) getUserByEmailAndPasswordController(ctx *gin.Context) {
@@ -94,6 +99,7 @@ func (s *Server) getUserByEmailAndPasswordController(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) createUserController(ctx *gin.Context) {
@@ -115,6 +121,7 @@ func (s *Server) createUserController(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) updateUserNameController(ctx *gin.Context) {
@@ -142,6 +149,7 @@ func (s *Server) updateUserNameController(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) updateUserEmailController(ctx *gin.Context) {
@@ -169,6 +177,7 @@ func (s *Server) updateUserEmailController(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) updateUserPhoneController(ctx *gin.Context) {
@@ -196,6 +205,7 @@ func (s *Server) updateUserPhoneController(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) updateUserAddressController(ctx *gin.Context) {
@@ -223,6 +233,7 @@ func (s *Server) updateUserAddressController(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) updateUserPasswordController(ctx *gin.Context) {
@@ -253,6 +264,7 @@ func (s *Server) updateUserPasswordController(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
 	})
+	return
 }
 
 func (s *Server) deleteUserController(ctx *gin.Context) {
@@ -268,4 +280,5 @@ func (s *Server) deleteUserController(ctx *gin.Context) {
 		return
 	}
 	ctx.Status(http.StatusNoContent)
+	return
 }

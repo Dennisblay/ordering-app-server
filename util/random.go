@@ -38,8 +38,8 @@ func RandomInt(min, max int64) int64 {
 
 func RandomInts(n int) int64 {
 	s := ""
-	for _ = range n { // Loop variable should be properly defined
-		s += strconv.FormatInt(RandomInt(0, 9), 10) // Adjusted the random range to [0, 9]
+	for _ = range n {
+		s += strconv.FormatInt(RandomInt(0, 9), 10)
 	}
 	n, err := strconv.Atoi(s)
 	if err != nil {
